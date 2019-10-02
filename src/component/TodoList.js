@@ -33,6 +33,7 @@ export default class TodoList extends React.Component {
             type="text"
             name="name"
             required
+            autoComplete='off'
             value={this.state.currentInputValue}
             placeholder="Enter todo event"
             onChange={e => {
