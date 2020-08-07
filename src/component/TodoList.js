@@ -1,4 +1,9 @@
 import React from "react";
+import store from '../reduxFiles/configureStore'
+import * as actions from '../reduxFiles/todo'
+import * as actions2 from '../reduxFiles/todo2'
+
+
 
 export default class TodoList extends React.Component {
   constructor(props) {
@@ -7,12 +12,27 @@ export default class TodoList extends React.Component {
       lst: [],
       currentInputValue: ""
     };
+    store.subscribe(() => {
+      this.updateListTodo();
+    })
   }
 
+  updateListTodo() {
+    this.setState({ lst: store.getState().entities.todo })
+  }
   deleteItem(index) {
-    const list = [...this.state.lst];
-    const updatedList = list.filter(item => item.id !== index);
-    this.setState({ lst: updatedList });
+    actions.todoRemoved(index);
+  }
+
+  addATodo() {
+    let val = this.state.currentInputValue
+    this.setState({ currentInputValue: '' }, () => {
+      actions.todoAdded(val);
+    })
+  }
+
+  deleteAllTodoFromList() {
+    actions.deleteAllTodo();
   }
 
   render() {
@@ -23,7 +43,7 @@ export default class TodoList extends React.Component {
             className="btn btn-warning d-inline-block"
             type="button"
             onClick={() => {
-              this.setState({ lst: [] });
+              this.deleteAllTodoFromList();
             }}
           >
             Reset
@@ -45,13 +65,7 @@ export default class TodoList extends React.Component {
             type="button"
             onClick={() => {
               if (this.state.currentInputValue.length !== 0) {
-                var temp = [...this.state.lst];
-                const newVal = {
-                  id: Date.now(),
-                  value: this.state.currentInputValue
-                };
-                temp.push(newVal);
-                this.setState({ lst: temp, currentInputValue: "" });
+                this.addATodo()
               }
             }}
           >
@@ -69,10 +83,8 @@ export default class TodoList extends React.Component {
                 className="bg-warning py-3 text-center my-1 justify-content-center "
                 key={item.id}
               >
-                {/* <div className="d-flex"> */}
-
                 <p className=" d-inline-block">
-                  {index + 1}. {item.value}
+                  {index + 1}. {item.description}
                 </p>
                 <button
                   className="btn btn-danger ml-3 d-inline-block"
@@ -87,6 +99,12 @@ export default class TodoList extends React.Component {
             );
           })}
         </div>
+        <button
+                  className="btn btn-danger ml-3 d-inline-block"
+                  onClick={() => {
+                   actions2.todoAdded("hhhhhhhh")
+                  }}
+                >delete diff</button>
       </div>
     );
   }
