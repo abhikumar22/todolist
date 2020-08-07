@@ -6,9 +6,8 @@ import store from './configureStore'
 // *******************************************************************************
 // Action Types -> All your Method names for action are mentioned here
 // should not 
-const DELETE_ALL_TODO = "deleteAllTodo";
-const REMOVE_A_TODO = "removeATodo";
-const Add_A_TODO = "addATodo"
+const INCREMENT_C = "increC";
+const DECREMENT_C = "decreC";
 // *******************************************************************************
 
 
@@ -18,29 +17,16 @@ const Add_A_TODO = "addATodo"
 // Action Creator -> All your Methods Description for performing an action
 
 // action with payload
-export function todoAdded(description) {
+export function incrementCounter() {
     return store.dispatch({
-        type: Add_A_TODO,
-        payload: {
-            description: description
-        }
+        type: INCREMENT_C,
     });
 }
 
 // action with payload
-export function todoRemoved(id) {
+export function decrementCounter() {
     return store.dispatch({
-        type: REMOVE_A_TODO,
-        payload: {
-            id: id
-        }
-    });
-}
-
-// action without payload
-export function deleteAllTodo() {
-    return store.dispatch({
-        type: DELETE_ALL_TODO,
+        type: DECREMENT_C,
     });
 }
 // *******************************************************************************
@@ -51,28 +37,16 @@ export function deleteAllTodo() {
 // Reducers -> It is the method which describs what to do when a particular action is triggered
 // Should be default export module
 
-let lastId = 0;
-export default function reducer(todo = [], action) {
+let counter = 0;
+export default function reducer(user = 0, action) {
 
     switch (action.type) {
-        case Add_A_TODO:
-            return [
-                //prev state
-                ...todo,
-                //add new Todo
-                {
-                    id: ++lastId,
-                    description: action.payload.description,
-                }
-            ]
-        case REMOVE_A_TODO:
-            return todo.filter(bug => bug.id !== action.payload.id)
-        
-        case DELETE_ALL_TODO:
-            return todo=[]
-
+        case INCREMENT_C:
+            return counter++
+        case DECREMENT_C:
+            return counter > 0 ? counter-- : 0;
         default:
-            return todo;
+            return user;
     }
 }
 

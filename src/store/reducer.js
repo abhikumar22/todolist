@@ -1,6 +1,8 @@
 import { combineReducers } from 'redux'
 // import all reducers
 import todo from './todo'
+import user from './user'
+
 
 
 
@@ -12,7 +14,7 @@ import todo from './todo'
 // ************************************************************
 
 
-const entities = combineReducers({ todo: todo })
+const entities = combineReducers({ todo: todo, user: user })
 
 
 

@@ -1,138 +1,115 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import * as actions from '../store/todo'
+import { useSelector,
+  // , useDispatch
+  shallowEqual,
+ } from "react-redux";
 
 
+const Todo = () => {
+  // whole store
+  // const todoList = useSelector(state => state)
 
-class TodoList extends React.Component {
+  //only seperate entity from store
+  const todoList= useSelector(state => state.entities.todo,shallowEqual)
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      lst: [],
-      inputValue: ''
-    }
-    // const store = props.store
-    // console.warn("sss", store)
+  
+  // const dispatch = useDispatch();
+  const [inputValue, setInputValue] = useState("");
 
-  }
+  useEffect(() => {
+    console.log("********changes in Todo*************")
+  });
 
-  componentDidMount() {
-    this.props.store.subscribe(() => {
-      this.updateListTodo()
-    })
-  }
-
-  componentWillUnmount() {
-    // this.unsubscribe();
-  }
-
-  updateListTodo = () => {
-    const storeTodoState = this.props.store.getState().entities.todo
-    if (this.state.lst !== storeTodoState) {
-      this.setState({ lst: storeTodoState })
-    }
-  }
-
-
-  handleSubmit = (evt) => {
+  const handleSubmit = (evt) => {
     evt.preventDefault();
-    this.addInputValue();
+    addInputValue();
   }
 
-  addInputValue = () => {
-    if (this.state.inputValue.length !== 0) {
-      actions.todoAdded(this.state.inputValue);
-      this.setState({inputValue:''})
+  const addInputValue = () => {
+    if (inputValue.length !== 0) {
+      actions.todoAdded(inputValue)
+      setInputValue('')
     }
   }
 
-  deleteATodoFromList = (id) => {
+  const deleteATodoFromList = (id) => {
     actions.todoRemoved(id)
   }
 
-  resetTodo = () => {
+  const resetTodo = () => {
     actions.deleteAllTodo()
   }
-  render() {
-    return (
+  return (
 
-      <div className="container-fluid bg-primary text-center py-4 text-white">
-        <div className="btn-group">
-          <form className="row" onSubmit={this.handleSubmit}>
-            <button
-              className="btn btn-warning d-inline-block"
-              type="button"
-              onClick={() => {
-                this.resetTodo();
-              }}
-            >
-              Reset
+
+    <div className="container-fluid bg-primary text-center py-4 text-white">
+      <div className="btn-group">
+        <form className="row" onSubmit={handleSubmit}>
+          <button
+            className="btn btn-warning d-inline-block"
+            type="button"
+            onClick={() => {
+              resetTodo();
+            }}
+          >
+            Reset
           </button>
-            <input
-              className="ml-2 d-inline-block "
-              type="text"
-              name="name"
-              required
-              autoComplete='off'
-              value={this.state.inputValue}
-              placeholder="Enter todo event"
-              onChange={e => {
-                const val = e.target.value
-                this.setState({ inputValue: val }, () => {
-                  // setTimeout(
-                  //   () => this.setState({inputValue:''}), 
-                  //   1000
-                  // );
-
-                })
-                // this.setInputValue(e.target.value);
-              }}
-            />
-            <button
-              className="ml-2 btn btn-success d-inline-block"
-              type="button"
-              onClick={() => {
-                this.addInputValue();
-              }}
-            >
-              Add
+          <input
+            className="ml-2 d-inline-block "
+            type="text"
+            name="name"
+            required
+            autoComplete='off'
+            value={inputValue}
+            placeholder="Enter todo event"
+            onChange={e => {
+              setInputValue(e.target.value)
+            }}
+          />
+          <button
+            className="ml-2 btn btn-success d-inline-block"
+            type="button"
+            onClick={() => {
+              addInputValue();
+            }}
+          >
+            Add
           </button>
-          </form>
-        </div>
-        <br />
-        <br />
-        <br />
-
-        <div className="">
-
-          {this.state.lst.map((item, index) => {
-            return (
-              <div
-                className="bg-warning py-3 text-center my-1 justify-content-center "
-                key={item.id}
-              >
-                <p className=" d-inline-block">
-                  {index + 1}. {item.description}
-                </p>
-                <button
-                  className="btn btn-danger ml-3 d-inline-block"
-                  onClick={() => {
-                    this.deleteATodoFromList(item.id)
-
-                  }}
-                >
-                  delete
-                </button>
-              </div>
-            );
-          })}
-
-        </div>
+        </form>
       </div>
+      <br />
+      <br />
+      <br />
 
-    );
-  }
+      <div className="">
+
+        {todoList.map((item, index) => {
+          return (
+            <div
+              className="bg-warning py-3 text-center my-1 justify-content-center "
+              key={item.id}
+            >
+              <p className=" d-inline-block">
+                {index + 1}. {item.description}
+              </p>
+              <button
+                className="btn btn-danger ml-3 d-inline-block"
+                onClick={() => {
+                  deleteATodoFromList(item.id)
+
+                }}
+              >
+                delete
+                </button>
+            </div>
+          );
+        })}
+
+      </div>
+    </div>
+
+  );
 }
 
-
-export default TodoList;
+export default React.memo(Todo) ;
