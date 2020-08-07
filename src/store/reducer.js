@@ -3,13 +3,6 @@ import { combineReducers } from 'redux'
 import todo from './todo'
 
 
-// put the reducers in the hirarcy form which you want
-export default combineReducers({
-    entities: entities
-})
-
-
-
 
 // ************************************************************
 // add your hirarcy here for the reducers which you want like
@@ -20,3 +13,12 @@ export default combineReducers({
 
 
 const entities = combineReducers({ todo: todo })
+
+
+
+// put the reducers in the hirarcy form which you want
+export default combineReducers({
+    entities: entities
+})
+
+

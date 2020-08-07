@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './pages/App'
+import EntryFile from './entryFile'
+
 
 ReactDOM.render(
-  <App />,
+    <EntryFile />,
   document.getElementById('root')
 );
