@@ -1,93 +1,93 @@
-import React from "react";
+import React, { useState } from 'react';
 
-export default class TodoList extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      lst: [],
-      currentInputValue: ""
-    };
+function App() {
+  const [inputValue, setInputValue] = useState(""); // handling input value
+  const [lst, setLst] = useState([]);  // handling list of todos
+
+  const handleSubmit = (evt) => {
+    evt.preventDefault();
+    addInputValue();
   }
 
-  deleteItem(index) {
-    const list = [...this.state.lst];
-    const updatedList = list.filter(item => item.id !== index);
-    this.setState({ lst: updatedList });
+  const addInputValue = () => {
+    if (inputValue.length !== 0) {
+      var temp = [...lst];
+      const newVal = {
+        id: Date.now(),
+        value: inputValue
+      };
+      temp.push(newVal);
+      setInputValue("");
+      setLst(temp)
+    }
   }
 
-  render() {
-    return (
-      <div className="container-fluid bg-primary text-center py-4 text-white">
-        <div className="btn-group">
+  return (
+    <div className="container-fluid bg-primary text-center py-4 text-white">
+      <div className="btn-group">
+        <form className="row" onSubmit={handleSubmit}>
           <button
             className="btn btn-warning d-inline-block"
             type="button"
             onClick={() => {
-              this.setState({ lst: [] });
+              setLst([]);
             }}
           >
             Reset
-          </button>
+            </button>
           <input
-            className="ml-2 d-inline-block form-control"
+            className="ml-2 d-inline-block "
             type="text"
             name="name"
             required
             autoComplete='off'
-            value={this.state.currentInputValue}
+            value={inputValue}
             placeholder="Enter todo event"
             onChange={e => {
-              this.setState({ currentInputValue: e.target.value });
+              setInputValue(e.target.value);
             }}
           />
           <button
             className="ml-2 btn btn-success d-inline-block"
             type="button"
             onClick={() => {
-              if (this.state.currentInputValue.length !== 0) {
-                var temp = [...this.state.lst];
-                const newVal = {
-                  id: Date.now(),
-                  value: this.state.currentInputValue
-                };
-                temp.push(newVal);
-                this.setState({ lst: temp, currentInputValue: "" });
-              }
+              addInputValue();
             }}
           >
             Add
-          </button>
-        </div>
-        <br />
-        <br />
-        <br />
-
-        <div className="">
-          {this.state.lst.map((item, index) => {
-            return (
-              <div
-                className="bg-warning py-3 text-center my-1 justify-content-center "
-                key={item.id}
-              >
-                {/* <div className="d-flex"> */}
-
-                <p className=" d-inline-block">
-                  {index + 1}. {item.value}
-                </p>
-                <button
-                  className="btn btn-danger ml-3 d-inline-block"
-                  onClick={() => {
-                    this.deleteItem(item.id);
-                  }}
-                >
-                  delete
-                </button>
-                {/* </div> */}
-              </div>
-            );
-          })}
-        </div>
+            </button>
+        </form>
       </div>
-    );
-  }
+      <br />
+      <br />
+      <br />
+
+      <div className="">
+        {lst.map((item, index) => {
+          return (
+            <div
+              className="bg-warning py-3 text-center my-1 justify-content-center "
+              key={item.id}
+            >
+              <p className=" d-inline-block">
+                {index + 1}. {item.value}
+              </p>
+              <button
+                className="btn btn-danger ml-3 d-inline-block"
+                onClick={() => {
+                  const list = [...lst];
+                  const updatedList = list.filter(value => value.id !== item.id);
+                  setLst(updatedList);
+                }}
+              >
+                delete
+                  </button>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
+
+export default App;
